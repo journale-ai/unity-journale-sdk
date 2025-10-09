@@ -1,0 +1,6 @@
+{
+  "name": "Journale.Editor",
+  "references": ["Journale.Runtime"],
+  "includePlatforms": ["Editor"],
+  "rootNamespace": "JournaleClient.Editor"
+}

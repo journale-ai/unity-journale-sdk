@@ -1,7 +1,7 @@
-// Assets/JournaleSDK/Runtime/Models.cs
+// Assets/JournaleClient/Runtime/Models.cs
 using System;
 
-namespace JournaleSDK
+namespace JournaleClient
 {
     [Serializable] public class SessionCreateRequest
     {

@@ -1,9 +1,9 @@
-// Assets/JournaleSDK/Runtime/SteamHelper.cs
+// Assets/JournaleClient/Runtime/SteamHelper.cs
 using System;
 using System.Threading;
 using UnityEngine;
 
-namespace JournaleSDK
+namespace JournaleClient
 {
     // Uses Steamworks.NET when JOURNALE_STEAMWORKS define is present in Player Settings.
     // Falls back to false without hard dependency if Steamworks isn't installed.

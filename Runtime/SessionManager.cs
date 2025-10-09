@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace JournaleSDK
+namespace JournaleClient
 {
     public class SessionManager : MonoBehaviour
     {

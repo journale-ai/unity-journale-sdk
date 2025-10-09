@@ -1,8 +1,8 @@
-// Assets/JournaleSDK/Runtime/Journale.cs
+// Assets/JournaleClient/Runtime/Journale.cs
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace JournaleSDK
+namespace JournaleClient
 {
     /// <summary>
     /// Public one-liner API.

@@ -1,8 +1,8 @@
-// Assets/JournaleSDK/Runtime/JournaleMemory.cs
+// Assets/JournaleClient/Runtime/JournaleMemory.cs
 using System.Collections.Generic;
 using System.Text;
 
-namespace JournaleSDK
+namespace JournaleClient
 {
     public class JournaleMemory
     {
