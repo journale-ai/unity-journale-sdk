@@ -1,7 +1,7 @@
 {
   "name": "com.journale.client",
   "displayName": "Journale Client - Unity",
-  "version": "0.0.1-prerelease",
+  "version": "0.0.2-prerelease",
   "unity": "2021.3",
   "description": "A lightweight Unity SDK for integrating Journale AI NPC interaction into your game. Includes automatic session handling, signed requests, and Steam support.",
   "keywords": ["journale", "sdk", "ai", "npc", "unity", "steam"],
