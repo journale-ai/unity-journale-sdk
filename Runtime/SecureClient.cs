@@ -1,10 +1,10 @@
-// Assets/JournaleSDK/Runtime/SecureClient.cs
+// Assets/JournaleClient/Runtime/SecureClient.cs
 using System;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace JournaleSDK
+namespace JournaleClient
 {
     public class SecureClient
     {

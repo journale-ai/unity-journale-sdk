@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace JournaleSDK
+namespace JournaleClient
 {
     public class JournaleService : MonoBehaviour
     {

@@ -1,11 +1,11 @@
-// Assets/JournaleSDK/Runtime/SessionConfig.cs
+// Assets/JournaleClient/Runtime/SessionConfig.cs
 using UnityEngine;
 
-namespace JournaleSDK
+namespace JournaleClient
 {
     public enum AuthPlatform { Guest, Steam }
 
-    [CreateAssetMenu(fileName="SessionConfig", menuName="JournaleSDK/Session Config", order=0)]
+    [CreateAssetMenu(fileName="SessionConfig", menuName="JournaleClient/Session Config", order=0)]
     public class SessionConfig : ScriptableObject
     {
         [Header("Server")]
