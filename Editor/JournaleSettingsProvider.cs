@@ -1,107 +1,81 @@
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
-using JournaleClient; // for SessionConfig
+using JournaleClient;
 
 namespace JournaleClient.Editor
 {
     public class JournaleSettingsProvider : SettingsProvider
     {
-        private SerializedObject _configSO;
+        private SerializedObject _so;
+        private SessionConfig _cfg;
 
         public JournaleSettingsProvider(string path, SettingsScope scope)
-            : base(path, scope)
-        {
-        }
+            : base(path, scope) {}
 
         [SettingsProvider]
         public static SettingsProvider CreateProvider()
-        {
-            return new JournaleSettingsProvider("Project/Journale SDK", SettingsScope.Project);
-        }
+            => new JournaleSettingsProvider("Project/Journale SDK", SettingsScope.Project);
 
         public override void OnGUI(string searchContext)
         {
-            // Try to find or create a SessionConfig asset
-            var config = FindOrCreateConfig();
-
-            if (config == null)
+            _cfg = FindOrCreateConfig();
+            if (_cfg == null)
             {
-                EditorGUILayout.HelpBox("No SessionConfig found. Click below to create one.", MessageType.Warning);
                 if (GUILayout.Button("Create SessionConfig"))
-                {
-                    config = CreateConfig();
-                }
+                    _cfg = CreateConfig();
                 return;
             }
 
-            if (_configSO == null)
-                _configSO = new SerializedObject(config);
+            if (_so == null || _so.targetObject != _cfg)
+                _so = new SerializedObject(_cfg);
 
-            _configSO.Update();
+            _so.Update();
 
-            EditorGUILayout.LabelField("Server", EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField(_configSO.FindProperty("apiBaseUrl"));
-            EditorGUILayout.PropertyField(_configSO.FindProperty("sessionCreatePath"));
-            EditorGUILayout.PropertyField(_configSO.FindProperty("chatPath"));
+            EditorGUILayout.PropertyField(_so.FindProperty("apiBaseUrl"));
+            EditorGUILayout.PropertyField(_so.FindProperty("sessionCreatePath"));
+            EditorGUILayout.PropertyField(_so.FindProperty("chatPath"));
             EditorGUILayout.Space();
-
-            EditorGUILayout.LabelField("Project", EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField(_configSO.FindProperty("projectId"));
+            EditorGUILayout.PropertyField(_so.FindProperty("projectId"));
             EditorGUILayout.Space();
-
-            EditorGUILayout.LabelField("Auth", EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField(_configSO.FindProperty("platform"));
-            EditorGUILayout.PropertyField(_configSO.FindProperty("deviceIdOverride"));
-            EditorGUILayout.PropertyField(_configSO.FindProperty("allowGuestFallbackIfSteamMissing"));
+            EditorGUILayout.PropertyField(_so.FindProperty("platform"));
+            EditorGUILayout.PropertyField(_so.FindProperty("deviceIdOverride"));
+            EditorGUILayout.PropertyField(_so.FindProperty("allowGuestFallbackIfSteamMissing"));
             EditorGUILayout.Space();
-
-            EditorGUILayout.LabelField("Client Behavior", EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField(_configSO.FindProperty("maxHistoryLinesForContext"));
-            EditorGUILayout.PropertyField(_configSO.FindProperty("maxRetriesOn429"));
-            EditorGUILayout.PropertyField(_configSO.FindProperty("baseBackoffSeconds"));
+            EditorGUILayout.PropertyField(_so.FindProperty("maxHistoryLinesForContext"));
+            EditorGUILayout.PropertyField(_so.FindProperty("maxRetriesOn429"));
+            EditorGUILayout.PropertyField(_so.FindProperty("baseBackoffSeconds"));
             EditorGUILayout.Space();
+            EditorGUILayout.PropertyField(_so.FindProperty("defaultPlayerDescription"));
+            _so.ApplyModifiedProperties();
 
-            EditorGUILayout.LabelField("Player", EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField(_configSO.FindProperty("defaultPlayerDescription"));
-            EditorGUILayout.Space();
-
-            _configSO.ApplyModifiedProperties();
-
-            if (GUILayout.Button("Ping Asset"))
-                EditorGUIUtility.PingObject(config);
+            if (GUILayout.Button("Ping Asset")) EditorGUIUtility.PingObject(_cfg);
         }
 
-        private SessionConfig FindOrCreateConfig()
+        private static SessionConfig FindOrCreateConfig()
         {
-            var config = Resources.Load<SessionConfig>("SessionConfig");
-            if (config == null)
-            {
-                string[] guids = AssetDatabase.FindAssets("t:SessionConfig");
-                if (guids.Length > 0)
-                {
-                    string path = AssetDatabase.GUIDToAssetPath(guids[0]);
-                    config = AssetDatabase.LoadAssetAtPath<SessionConfig>(path);
-                }
-            }
-            return config;
+            var cfg = Resources.Load<SessionConfig>("SessionConfig");
+            if (cfg) return cfg;
+
+            string[] guids = AssetDatabase.FindAssets("t:SessionConfig");
+            if (guids.Length > 0)
+                return AssetDatabase.LoadAssetAtPath<SessionConfig>(AssetDatabase.GUIDToAssetPath(guids[0]));
+
+            return null;
         }
 
-        private SessionConfig CreateConfig()
+        private static SessionConfig CreateConfig()
         {
             const string dir = "Assets/Resources";
             const string path = dir + "/SessionConfig.asset";
-
             if (!AssetDatabase.IsValidFolder("Assets/Resources"))
                 AssetDatabase.CreateFolder("Assets", "Resources");
 
-            var config = ScriptableObject.CreateInstance<SessionConfig>();
-            AssetDatabase.CreateAsset(config, path);
+            var cfg = ScriptableObject.CreateInstance<SessionConfig>();
+            AssetDatabase.CreateAsset(cfg, path);
             AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-
-            EditorGUIUtility.PingObject(config);
-            return config;
+            EditorGUIUtility.PingObject(cfg);
+            return cfg;
         }
     }
 }
