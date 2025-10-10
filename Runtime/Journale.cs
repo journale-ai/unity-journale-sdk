@@ -16,7 +16,10 @@ namespace JournaleClient
         static GameObject _host;
         static bool _initialized;
 
-        /// <summary>Call once at boot with your SessionConfig asset (or put one in Resources/SessionConfig).</summary>
+        /// <summary>
+        /// Call once at boot with your SessionConfig asset.
+        /// If not called, will attempt to load from Assets/JournaleClient/Resources/SessionConfig.asset
+        /// </summary>
         public static void Initialize(SessionConfig config)
         {
             if (_initialized) return;
@@ -63,7 +66,7 @@ namespace JournaleClient
             if (_initialized) return;
             var cfg = _config ?? Resources.Load<SessionConfig>("SessionConfig");
             if (cfg == null)
-                throw new System.SystemException("Journale.Initialize(config) not called and no Resources/SessionConfig found.");
+                throw new System.SystemException("Journale.Initialize(config) not called and no SessionConfig found. Create one via Project Settings > Journale SDK.");
             Initialize(cfg);
         }
     }

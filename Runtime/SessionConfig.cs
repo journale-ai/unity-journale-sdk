@@ -17,8 +17,10 @@ namespace JournaleClient
         public string projectId = ""; // set it once
 
         [Header("Auth")]
+        [Tooltip("Guest: Device-based auth. Steam: Requires Steamworks.NET package (optional).")]
         public AuthPlatform platform = AuthPlatform.Guest;
         public string deviceIdOverride = "";
+        [Tooltip("If Steam auth fails, fallback to Guest mode automatically.")]
         public bool allowGuestFallbackIfSteamMissing = true;
 
         [Header("Client Behavior")]
