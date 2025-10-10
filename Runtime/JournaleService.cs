@@ -41,14 +41,14 @@ namespace JournaleClient
 
                 if (config == null)
                 {
-                    // Last resort: look in Resources (works if you created Resources/SessionConfig.asset)
+                    // Last resort: look in Resources folder (Assets/JournaleClient/Resources/)
                     config = Resources.Load<SessionConfig>("SessionConfig");
                 }
 
                 if (config == null)
                 {
                     Debug.LogError("JournaleService: Missing SessionConfig. " +
-                                   "Call Journale.Initialize(config) once, or create Resources/SessionConfig.asset.");
+                                   "Call Journale.Initialize(config) once, or create one via Project Settings > Journale SDK.");
                     // Construct a dummy client to avoid NRE chain; calls will still fail with a clear error.
                     _client = new SecureClient(new SessionConfig());
                 }

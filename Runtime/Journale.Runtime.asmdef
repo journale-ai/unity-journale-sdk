@@ -2,6 +2,20 @@
   "name": "Journale.Runtime",
   "rootNamespace": "JournaleClient",
   "references": [],
+  "optionalUnityReferences": [],
   "includePlatforms": [],
-  "excludePlatforms": ["Editor"]
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [
+    {
+      "name": "com.rlabrecque.steamworks.net",
+      "expression": "",
+      "define": "STEAMWORKS_NET"
+    }
+  ],
+  "noEngineReferences": false
 }

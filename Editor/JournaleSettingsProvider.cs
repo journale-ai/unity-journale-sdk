@@ -54,9 +54,16 @@ namespace JournaleClient.Editor
 
         private static SessionConfig FindOrCreateConfig()
         {
-            var cfg = Resources.Load<SessionConfig>("SessionConfig");
+            // First try the standard location
+            const string standardPath = "Assets/JournaleClient/Resources/SessionConfig.asset";
+            var cfg = AssetDatabase.LoadAssetAtPath<SessionConfig>(standardPath);
             if (cfg) return cfg;
 
+            // Fallback to Resources.Load (works with any Resources folder)
+            cfg = Resources.Load<SessionConfig>("SessionConfig");
+            if (cfg) return cfg;
+
+            // Last resort: search for any SessionConfig asset
             string[] guids = AssetDatabase.FindAssets("t:SessionConfig");
             if (guids.Length > 0)
                 return AssetDatabase.LoadAssetAtPath<SessionConfig>(AssetDatabase.GUIDToAssetPath(guids[0]));
@@ -66,10 +73,17 @@ namespace JournaleClient.Editor
 
         private static SessionConfig CreateConfig()
         {
-            const string dir = "Assets/Resources";
-            const string path = dir + "/SessionConfig.asset";
-            if (!AssetDatabase.IsValidFolder("Assets/Resources"))
-                AssetDatabase.CreateFolder("Assets", "Resources");
+            // Create in Assets/JournaleClient/Resources/
+            // This allows Resources.Load to work at runtime while keeping files organized
+            const string baseDir = "Assets/JournaleClient";
+            const string resourcesDir = baseDir + "/Resources";
+            const string path = resourcesDir + "/SessionConfig.asset";
+
+            // Create directory structure
+            if (!AssetDatabase.IsValidFolder(baseDir))
+                AssetDatabase.CreateFolder("Assets", "JournaleClient");
+            if (!AssetDatabase.IsValidFolder(resourcesDir))
+                AssetDatabase.CreateFolder(baseDir, "Resources");
 
             var cfg = ScriptableObject.CreateInstance<SessionConfig>();
             AssetDatabase.CreateAsset(cfg, path);
