@@ -10,8 +10,9 @@ namespace JournaleClient
     {
         [Header("Server")]
         public string apiBaseUrl = "https://api.journale.ai";
-        public string sessionCreatePath = "/session/create";
-        public string chatPath = "/chat/player";
+        public string sessionCreatePath = "/v1/sessions";
+        public string chatPath = "/v1/chat/player";
+        public string characterChatPath = "/v1/chat/player/character";
 
         [Header("Project")]
         public string projectId = ""; // set it once

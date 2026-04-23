@@ -61,6 +61,26 @@ namespace JournaleClient
             );
         }
 
+        /// <summary>
+        /// Send a message to a stored Journale character by developer-facing characterId slug.
+        /// </summary>
+        public static async Task<string> ChatWithCharacterAsync(
+            string characterId,
+            string message,
+            string context = null,
+            string playerDescription = null,
+            string playerId = null)
+        {
+            EnsureInitialized();
+            return await JournaleService.Instance.SendWithCharacterAsync(
+                characterId,
+                message,
+                context,
+                playerDescription,
+                playerId
+            );
+        }
+
         static void EnsureInitialized()
         {
             if (_initialized) return;

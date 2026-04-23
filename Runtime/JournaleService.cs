@@ -107,6 +107,38 @@ namespace JournaleClient
             return reply;
         }
 
+        public async Task<string> SendWithCharacterAsync(
+            string characterId,
+            string userMessage,
+            string context = null,
+            string playerDescriptionOverride = null,
+            string playerId = null)
+        {
+            EnsureReady();
+
+            await SessionManager.Instance.EnsureSessionAsync();
+
+            var localPlayerId = SessionManager.Instance.PlayerId ?? playerId ?? "local";
+            var contextForThisTurn = string.IsNullOrEmpty(context)
+                ? _memory.BuildContext(characterId, localPlayerId, config.maxHistoryLinesForContext)
+                : context;
+
+            _memory.Add(characterId, localPlayerId, "user", userMessage, config.maxHistoryLinesForContext);
+
+            var req = new ChatRequest
+            {
+                message           = userMessage,
+                context           = contextForThisTurn,
+                characterId       = characterId,
+                playerDescription = playerDescriptionOverride ?? config.defaultPlayerDescription
+            };
+
+            var resp = await _client.ChatAsync(req, config.characterChatPath);
+            var reply = string.IsNullOrWhiteSpace(resp.reply) ? "(no reply)" : resp.reply.Trim();
+            _memory.Add(characterId, localPlayerId, "npc", reply, config.maxHistoryLinesForContext);
+            return reply;
+        }
+
         void OnDestroy()
         {
             if (Instance == this) Instance = null;

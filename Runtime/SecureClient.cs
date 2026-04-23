@@ -12,9 +12,9 @@ namespace JournaleClient
 
         public SecureClient(SessionConfig cfg) { _cfg = cfg; }
 
-        public async Task<ChatResponse> ChatAsync(ChatRequest payload)
+        public async Task<ChatResponse> ChatAsync(ChatRequest payload, string pathOverride = null)
         {
-            string path = _cfg.chatPath;
+            string path = string.IsNullOrEmpty(pathOverride) ? _cfg.chatPath : pathOverride;
             string body = JsonUtility.ToJson(payload);
 
             int tries = 0;
@@ -27,11 +27,10 @@ namespace JournaleClient
 
                 if (req.result == UnityWebRequest.Result.Success)
                 {
-                    // ---- DEBUG: log /chat/player JSON for copy/paste ----
-                    Debug.Log($"[JOURNALE] /chat/player response: {Compact(respText)}");
+                    Debug.Log($"[JOURNALE] {path} response: {Compact(respText)}");
 
                     var resp = JsonUtility.FromJson<ChatResponse>(respText);
-                    if (resp == null) throw new Exception("Bad JSON from /chat/player");
+                    if (resp == null) throw new Exception($"Bad JSON from {path}");
                     return resp;
                 }
 
@@ -46,7 +45,7 @@ namespace JournaleClient
 
                 // ---- Filter out HTML error pages and only log relevant error info ----
                 string errorMsg = GetReadableError(respText, req);
-                Debug.LogWarning($"[JOURNALE] /chat/player HTTP {(int)req.responseCode}: {errorMsg}");
+                Debug.LogWarning($"[JOURNALE] {path} HTTP {(int)req.responseCode}: {errorMsg}");
                 throw new Exception($"HTTP {req.responseCode}: {errorMsg}");
             }
         }

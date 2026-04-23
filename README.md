@@ -81,6 +81,30 @@ public class NpcInteraction : MonoBehaviour
 }
 ```
 
+### Chat with Dashboard Characters
+
+Create a character in the Journale dashboard, then call it by its `characterId` slug:
+
+```csharp
+using JournaleClient;
+using UnityEngine;
+
+public class StoredCharacterInteraction : MonoBehaviour
+{
+    async void TalkToMerchant()
+    {
+        string reply = await Journale.ChatWithCharacterAsync(
+            characterId: "silas_merchant",
+            message: "What do you have for sale today?"
+        );
+
+        Debug.Log($"Merchant says: {reply}");
+    }
+}
+```
+
+The SDK targets `/v1/sessions`, `/v1/chat/player`, and `/v1/chat/player/character`.
+
 ## Steam Integration (Optional)
 
 The SDK supports **optional** Steam authentication via Steamworks.NET:
@@ -110,4 +134,9 @@ The SDK supports **optional** Steam authentication via Steamworks.NET:
 
 © Journale AI - All rights reserved
 
-```
+## Changelog
+
+### 0.1.0-prerelease
+
+- Rebased SDK HTTP paths to `/v1`.
+- Added `Journale.ChatWithCharacterAsync(...)` for dashboard-managed characters.

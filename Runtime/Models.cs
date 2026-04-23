@@ -29,6 +29,7 @@ namespace JournaleClient
         public string context;                // compact local history
         public string characterDescription;   // optional
         public string characterID;            // optional UUID
+        public string characterId;            // optional stored-character slug
         public string playerDescription;      // optional
     }
 
