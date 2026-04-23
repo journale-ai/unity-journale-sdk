@@ -50,7 +50,7 @@ public class GameBootstrap : MonoBehaviour
     {
         // Option 1: Auto-load from standard location
         // SessionConfig will be loaded from Assets/JournaleClient/Resources/
-        var reply = await Journale.ChatToNpcAsync("npc_001", "Hello!");
+        var reply = await Journale.ChatToAi("npc_001", "Hello!");
         
         // Option 2: Explicit initialization (recommended for control)
         SessionConfig config = Resources.Load<SessionConfig>("SessionConfig");
@@ -69,17 +69,41 @@ public class NpcInteraction : MonoBehaviour
 {
     async void TalkToNpc()
     {
-        string reply = await Journale.ChatToNpcAsync(
+        string reply = await Journale.ChatToAi(
             localId: "npc_guard_001",
             message: "What's your quest?",
             characterDescription: "A gruff town guard",
-            characterId: "guard_archetype_01"
+            playerDescriptionOverride: "A traveler looking for work."
         );
         
         Debug.Log($"NPC says: {reply}");
     }
 }
 ```
+
+### Chat with Dashboard Characters
+
+Create a character in the Journale dashboard, then call it by its `characterId` slug:
+
+```csharp
+using JournaleClient;
+using UnityEngine;
+
+public class StoredCharacterInteraction : MonoBehaviour
+{
+    async void TalkToMerchant()
+    {
+        string reply = await Journale.ChatWithCharacter(
+            characterId: "silas_merchant",
+            message: "What do you have for sale today?"
+        );
+
+        Debug.Log($"Merchant says: {reply}");
+    }
+}
+```
+
+The SDK targets `/v1/sessions`, `/v1/chat/player`, and `/v1/chat/player/character`.
 
 ## Steam Integration (Optional)
 
@@ -110,4 +134,19 @@ The SDK supports **optional** Steam authentication via Steamworks.NET:
 
 © Journale AI - All rights reserved
 
-```
+## Changelog
+
+### 0.2.0-prerelease
+
+- Renamed the Unity public API to `ChatToAi(...)` and `ChatWithCharacter(...)`.
+- Removed `ChatToNpcAsync(...)` and `ChatWithCharacterAsync(...)`.
+
+### 0.1.1-prerelease
+
+- Fixed Unity inline chat serialization so `ChatToAi(...)` no longer sends `characterId` fields to `/v1/chat/player`.
+
+### 0.1.0-prerelease
+
+- Rebased SDK HTTP paths to `/v1`.
+- Added stored-character chat support in the Unity SDK.
+- Inline chat no longer accepts dashboard `characterId`; stored characters use `ChatWithCharacter(...)`.

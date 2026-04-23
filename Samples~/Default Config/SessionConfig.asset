@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: SessionConfig
   m_EditorClassIdentifier: Assembly-CSharp::JournaleSDK.SessionConfig
   apiBaseUrl: https://api.journale.ai
-  sessionCreatePath: /session/create
-  chatPath: /chat/player
+  sessionCreatePath: /v1/sessions
+  chatPath: /v1/chat/player
+  characterChatPath: /v1/chat/player/character
   projectId: 
   platform: 0
   deviceIdOverride: 

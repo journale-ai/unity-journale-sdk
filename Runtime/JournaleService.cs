@@ -66,7 +66,6 @@ namespace JournaleClient
             string localId,                 // REQUIRED: your own local identifier for this NPC
             string userMessage,
             string characterDescription = null,
-            string characterId = null,
             string playerDescriptionOverride = null)
         {
             EnsureReady();
@@ -80,12 +79,11 @@ namespace JournaleClient
             // Now record the user message for future turns
             _memory.Add(localId, playerId, "user", userMessage, config.maxHistoryLinesForContext);
 
-            var req = new ChatRequest
+            var req = new InlineChatRequest
             {
                 message               = userMessage,
                 context               = contextForThisTurn,
                 characterDescription  = characterDescription,
-                characterID           = characterId,
                 playerDescription     = playerDescriptionOverride ?? config.defaultPlayerDescription
             };
             
@@ -104,6 +102,38 @@ namespace JournaleClient
             
             var reply = string.IsNullOrWhiteSpace(resp.reply) ? "(no reply)" : resp.reply.Trim();
             _memory.Add(localId, playerId, "npc", reply, config.maxHistoryLinesForContext);
+            return reply;
+        }
+
+        public async Task<string> SendWithCharacterAsync(
+            string characterId,
+            string userMessage,
+            string context = null,
+            string playerDescriptionOverride = null,
+            string playerId = null)
+        {
+            EnsureReady();
+
+            await SessionManager.Instance.EnsureSessionAsync();
+
+            var localPlayerId = SessionManager.Instance.PlayerId ?? playerId ?? "local";
+            var contextForThisTurn = string.IsNullOrEmpty(context)
+                ? _memory.BuildContext(characterId, localPlayerId, config.maxHistoryLinesForContext)
+                : context;
+
+            _memory.Add(characterId, localPlayerId, "user", userMessage, config.maxHistoryLinesForContext);
+
+            var req = new CharacterChatRequest
+            {
+                message           = userMessage,
+                context           = contextForThisTurn,
+                characterId       = characterId,
+                playerDescription = playerDescriptionOverride ?? config.defaultPlayerDescription
+            };
+
+            var resp = await _client.ChatAsync(req, config.characterChatPath);
+            var reply = string.IsNullOrWhiteSpace(resp.reply) ? "(no reply)" : resp.reply.Trim();
+            _memory.Add(characterId, localPlayerId, "npc", reply, config.maxHistoryLinesForContext);
             return reply;
         }
 

@@ -8,7 +8,7 @@ namespace JournaleClient
     /// Public one-liner API.
     /// Usage:
     ///   Journale.Initialize(myConfigAsset);
-    ///   var reply = await Journale.ChatToNpcAsync("myLocalId", "Hello!");
+    ///   var reply = await Journale.ChatToAi("myLocalId", "Hello!");
     /// </summary>
     public static class Journale
     {
@@ -40,15 +40,14 @@ namespace JournaleClient
         /// <summary>
         /// Send a message to an NPC.
         /// localId: your own unique per-NPC identifier used for local history.
-        /// characterDescription/characterId: optional context for your server.
+        /// characterDescription: optional inline persona for this request.
         /// playerDescriptionOverride: optional override for config default.
         /// Returns: just the NPC reply string.
         /// </summary>
-        public static async Task<string> ChatToNpcAsync(
+        public static async Task<string> ChatToAi(
             string localId,
             string message,
             string characterDescription = null,
-            string characterId = null,
             string playerDescriptionOverride = null)
         {
             EnsureInitialized();
@@ -56,8 +55,27 @@ namespace JournaleClient
                 localId,
                 message,
                 characterDescription,
-                characterId,
                 playerDescriptionOverride
+            );
+        }
+
+        /// <summary>
+        /// Send a message to a stored Journale character by developer-facing characterId slug.
+        /// </summary>
+        public static async Task<string> ChatWithCharacter(
+            string characterId,
+            string message,
+            string context = null,
+            string playerDescription = null,
+            string playerId = null)
+        {
+            EnsureInitialized();
+            return await JournaleService.Instance.SendWithCharacterAsync(
+                characterId,
+                message,
+                context,
+                playerDescription,
+                playerId
             );
         }
 
