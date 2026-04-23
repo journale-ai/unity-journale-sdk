@@ -12,7 +12,7 @@ namespace JournaleClient
 
         public SecureClient(SessionConfig cfg) { _cfg = cfg; }
 
-        public async Task<ChatResponse> ChatAsync(ChatRequest payload, string pathOverride = null)
+        public async Task<ChatResponse> ChatAsync<TRequest>(TRequest payload, string pathOverride = null)
         {
             string path = string.IsNullOrEmpty(pathOverride) ? _cfg.chatPath : pathOverride;
             string body = JsonUtility.ToJson(payload);

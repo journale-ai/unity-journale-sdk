@@ -66,7 +66,6 @@ namespace JournaleClient
             string localId,                 // REQUIRED: your own local identifier for this NPC
             string userMessage,
             string characterDescription = null,
-            string characterId = null,
             string playerDescriptionOverride = null)
         {
             EnsureReady();
@@ -80,12 +79,11 @@ namespace JournaleClient
             // Now record the user message for future turns
             _memory.Add(localId, playerId, "user", userMessage, config.maxHistoryLinesForContext);
 
-            var req = new ChatRequest
+            var req = new InlineChatRequest
             {
                 message               = userMessage,
                 context               = contextForThisTurn,
                 characterDescription  = characterDescription,
-                characterID           = characterId,
                 playerDescription     = playerDescriptionOverride ?? config.defaultPlayerDescription
             };
             
@@ -125,7 +123,7 @@ namespace JournaleClient
 
             _memory.Add(characterId, localPlayerId, "user", userMessage, config.maxHistoryLinesForContext);
 
-            var req = new ChatRequest
+            var req = new CharacterChatRequest
             {
                 message           = userMessage,
                 context           = contextForThisTurn,

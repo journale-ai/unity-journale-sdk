@@ -23,12 +23,18 @@ namespace JournaleClient
         public string expires_at;     // ISO-8601
     }
 
-    [Serializable] public class ChatRequest
+    [Serializable] public class InlineChatRequest
     {
         public string message;
         public string context;                // compact local history
         public string characterDescription;   // optional
-        public string characterID;            // optional UUID
+        public string playerDescription;      // optional
+    }
+
+    [Serializable] public class CharacterChatRequest
+    {
+        public string message;
+        public string context;                // compact local history
         public string characterId;            // optional stored-character slug
         public string playerDescription;      // optional
     }
